@@ -3,3 +3,30 @@
     margin:0;
 }
 
+body {
+}
+
+#tileMap {
+    background-image: url("../img/mapa.png");
+    width: 960px;
+    height: 336px;
+    position: absolute;
+    display:none;
+}
+
+.absolute {
+    position:absolute;
+    text-align:center;
+    height:48px;
+    width:48px;
+    font-size:1em;
+    border:1px solid white;
+    display:none;
+}
+
+#canvas{
+    width:850px;
+    height:450px;
+    position:absolute;
+    overflow: scroll;
+}
