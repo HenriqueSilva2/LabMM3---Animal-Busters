@@ -26,7 +26,7 @@ body {
 
 #camera {
     position: absolute;
-    overflow: scroll;
+    overflow: hidden;
     border: 1px solid yellow;
     width: 850px;
     height: 450px;
