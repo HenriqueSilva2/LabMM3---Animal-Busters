@@ -1,9 +1,16 @@
 $(document).ready(function () {
     detetaImg();
     desenharMapa();
-
+    carregaElementos();
 });
 
+/* Variaveis Globais */
+var canvas = $('#canvas');
+var linhaInicial = 14;
+var colunaInicial = 4;
+var alturaTiles = 48;
+var char;
+var velocidadeChar = 10;
 
 var arrayMapa = [
     [40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40],
@@ -23,43 +30,12 @@ var arrayMapa = [
     [0, 0, 0, 0, 0, 0, 0, 0, 68, 0, 21, 40, 40, 40, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 ];
 
-function desenharMapa() {
-var tileNumber = 0;
-    for (l = 0; l < arrayMapa.length; l++) {
-
-        for (c = 0; c < arrayMapa[l].length; c++) {
-
-            var canvas = $('#canvas');
-            tileNumber++;
-
-            var idTileMap = $('#' + arrayMapa[l][c]);
-
-            var posX = parseInt(idTileMap.css('margin-left'));
-            var posY = parseInt(idTileMap.css('margin-top'));
-            canvas.append("<div id='tile" + tileNumber + "'></div>");
-            var tileId = $('#tile' + tileNumber);
-
-            tileId.css('margin-top', l * 48 + "px");
-            tileId.css('margin-left', c * 48 + "px");
-
-            tileId.css('height', '48px');
-            tileId.css('width', '48px');
-            tileId.css('background-image', 'url("img/mapa.png")');
-            tileId.css('background-position', (-posX) + "px " + (-posY) + "px");
-            tileId.css('position','absolute');
-
-        }
-    }
-}
-
-
 function detetaImg() {
     var larguraTile = 20;
     var alturaTile = 7;
     var altura = 48;
 
-
-    for (i = 0; i <= (larguraTile * alturaTile) - 1; i++) {
+    for (var i = 0; i <= (larguraTile * alturaTile) - 1; i++) {
         $('#tileMap').append("<div class='absolute' id='" + i + "'>" + i + "</div>");
         var id = $('#' + i);
 
@@ -95,4 +71,92 @@ function detetaImg() {
 
 }
 
+function desenharMapa() {
+    var tileNumber = 0;
+    for (var l = 0; l < arrayMapa.length; l++) {
+        for (var c = 0; c < arrayMapa[l].length; c++) {
+
+
+            tileNumber++;
+
+            var idTileMap = $('#' + arrayMapa[l][c]);
+
+            var posX = parseInt(idTileMap.css('margin-left'));
+            var posY = parseInt(idTileMap.css('margin-top'));
+            canvas.append("<div id='tile" + tileNumber + "'></div>");
+            var tileId = $('#tile' + tileNumber);
+
+            tileId.css('margin-top', l * 48 + "px");
+            tileId.css('margin-left', c * 48 + "px");
+
+            tileId.css('height', '48px');
+            tileId.css('width', '48px');
+            tileId.css('background-image', 'url("img/mapa.png")');
+            tileId.css('background-position', (-posX) + "px " + (-posY) + "px");
+            tileId.css('position', 'absolute');
+        }
+    }
+}
+
+
+/* PERSONAGEM MOVIMENTO E SPRITES */
+
+function carregaElementos() {
+    canvas.append("<div id='personagem'></div>");
+    char = $('#personagem');
+
+    char.css('margin-top', linhaInicial * alturaTiles - alturaTiles + "px");
+    char.css('margin-left', (colunaInicial * 48) + "px");
+
+    cameraInicio();
+}
+
+function cameraInicio() {
+    canvas.css('margin-top', -(6 * alturaTiles ) + "px");
+    console.log(canvas.css('margin-top'));
+}
+
+$(document).keypress(function (e) {
+    var key = e.key || e.which;
+
+    switch (key) {
+        case "w":
+        case "W":
+            console.log("cima");
+            movimentaPersonagem(0, -velocidadeChar);
+            break;
+        case "s":
+        case "S":
+            console.log("baixo");
+            movimentaPersonagem(0, velocidadeChar);
+            break;
+        case "a":
+        case "A":
+            console.log("esquerda");
+            movimentaPersonagem(-velocidadeChar, 0);
+            break;
+        case "d":
+        case "D":
+            console.log("direita");
+            movimentaPersonagem(velocidadeChar, 0);
+            break;
+    }
+
+});
+
+function movimentaPersonagem(left, top) {
+
+    var charPosX = parseFloat(char.css('margin-left'));
+    var charPosY = parseFloat(char.css('margin-top'));
+
+    char.css('margin-left', left + charPosX + "px");
+    char.css('margin-top', top + charPosY + "px");
+}
+
+/*
+function atualizaCamera(){
+    console.log("atualizaCamera");
+   canvasTop = parseFloat(canvas.css('margin-top'));
+   canvas.css('margin-top',canvasTop-velocidadeChar+"px");
+} */
 

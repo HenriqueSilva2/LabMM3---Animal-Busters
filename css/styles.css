@@ -1,6 +1,6 @@
 * {
-    padding:0;
-    margin:0;
+    padding: 0;
+    margin: 0;
 }
 
 body {
@@ -11,22 +11,37 @@ body {
     width: 960px;
     height: 336px;
     position: absolute;
-    display:none;
+    display: none;
 }
 
 .absolute {
-    position:absolute;
-    text-align:center;
-    height:48px;
-    width:48px;
-    font-size:1em;
-    border:1px solid white;
-    display:none;
+    position: absolute;
+    text-align: center;
+    height: 48px;
+    width: 48px;
+    font-size: 1em;
+    border: 1px solid white;
+    display: none;
 }
 
-#canvas{
-    width:850px;
-    height:450px;
-    position:absolute;
+#camera {
+    position: absolute;
     overflow: scroll;
+    border: 1px solid yellow;
+    width: 850px;
+    height: 450px;
+}
+
+#canvas {
+    width: 1104px;
+    height: 720px;
+    position: absolute;
+}
+
+#personagem {
+    width: 48px;
+    height: 48px;
+    background-color: black;
+    position: absolute;
+    z-index: 9999;
 }
