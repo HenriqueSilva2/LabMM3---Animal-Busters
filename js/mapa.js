@@ -6,11 +6,8 @@ $(document).ready(function () {
 
 /* Variaveis Globais */
 var canvas = $('#canvas');
-var linhaInicial = 14;
-var colunaInicial = 4;
-var alturaTiles = 48;
-var char;
-var velocidadeChar = 10;
+var linhaInicial = 14,colunaInicial = 4,alturaTiles = 48,char,velocidadeChar = 10,baixo=1,cima=1,esquerda=1,direita=1,parado=1,myint,tempo=0,myint2;
+
 
 var arrayMapa = [
     [40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40],
@@ -102,46 +99,66 @@ function desenharMapa() {
 /* PERSONAGEM MOVIMENTO E SPRITES */
 
 function carregaElementos() {
+
     canvas.append("<div id='personagem'></div>");
     char = $('#personagem');
 
     char.css('margin-top', linhaInicial * alturaTiles - alturaTiles + "px");
     char.css('margin-left', (colunaInicial * 48) + "px");
-
+    char.css('background-image', 'url("img/personagem.png")');
+    char.css('background-position',"-8px -7px");
     cameraInicio();
+    myint = setInterval(function () {
+        movimentoparado();},150);
 }
 
 function cameraInicio() {
     canvas.css('margin-top', -(6 * alturaTiles ) + "px");
+    canvas.css('margin-left',"0px");
     console.log(canvas.css('margin-top'));
 }
 
 $(document).keypress(function (e) {
     var key = e.key || e.which;
-
+    clearInterval(myint2);
     switch (key) {
         case "w":
         case "W":
+            clearInterval(myint);
             console.log("cima");
+            atualizaCamera("cima",-velocidadeChar);
             movimentaPersonagem(0, -velocidadeChar);
+            sprite("cima");
             break;
         case "s":
         case "S":
+            clearInterval(myint);
             console.log("baixo");
+            atualizaCamera("baixo",velocidadeChar);
             movimentaPersonagem(0, velocidadeChar);
+            sprite("baixo");
             break;
         case "a":
         case "A":
+            clearInterval(myint);
             console.log("esquerda");
+            atualizaCamera("esquerda",-velocidadeChar);
             movimentaPersonagem(-velocidadeChar, 0);
+            sprite("esquerda");
             break;
         case "d":
         case "D":
+            clearInterval(myint);
             console.log("direita");
+            atualizaCamera("direita",velocidadeChar);
             movimentaPersonagem(velocidadeChar, 0);
+            sprite("direita");
             break;
     }
-
+    tempo=0;
+    myint2 =  setInterval(function () {
+        meutimer();
+    },1000);
 });
 
 function movimentaPersonagem(left, top) {
@@ -149,14 +166,140 @@ function movimentaPersonagem(left, top) {
     var charPosX = parseFloat(char.css('margin-left'));
     var charPosY = parseFloat(char.css('margin-top'));
 
-    char.css('margin-left', left + charPosX + "px");
-    char.css('margin-top', top + charPosY + "px");
+    if(charPosX + left <=1052 && charPosX + left >=0){
+        char.css('margin-left', left + charPosX + "px");}
+    if(charPosY + top <=664 && charPosY + top >=0){
+        char.css('margin-top', top + charPosY + "px");}
 }
 
-/*
-function atualizaCamera(){
+/* MAPA MOVIMENTO*/
+function atualizaCamera(orientacao,velocidade){
     console.log("atualizaCamera");
-   canvasTop = parseFloat(canvas.css('margin-top'));
-   canvas.css('margin-top',canvasTop-velocidadeChar+"px");
-} */
+    var canvasTop = parseFloat(canvas.css('margin-top'));
+    var canvasLeft = parseFloat(canvas.css('margin-left'));
+    var charPosX = parseFloat(char.css('margin-left'));
+    var charPosY = parseFloat(char.css('margin-top'));
 
+    switch (orientacao){
+        case "cima":
+            if(canvasTop<-8 && charPosY <624){
+                canvas.css('margin-top',canvasTop-velocidade+"px");}
+            break;
+        case "baixo":
+            if(canvasTop>-278 && charPosY>344){
+                canvas.css('margin-top',canvasTop-velocidade+"px");}
+            break;
+        case "esquerda":
+            if(canvasLeft<0 && charPosX<462){
+                canvas.css('margin-left',canvasLeft-velocidade+"px");}
+            break;
+        case "direita":
+            if(canvasLeft>-270 && charPosX>192){
+                canvas.css('margin-left',canvasLeft-velocidade+"px");}
+            break;
+    }
+}
+function sprite(x) {
+    var personagem = $('#personagem');
+    if(x=="baixo"){
+        direita=1;cima=1;esquerda=1;
+        if(baixo==1){
+            personagem.css('background-position',"-8px -55px");
+            baixo=0;
+        }else{
+            personagem.css('background-position',"-56px -55px");
+            baixo++;
+        }
+    }
+    if(x=="cima"){
+        baixo=1;direita=1;esquerda=1;
+        if(cima==1){
+            personagem.css('background-position',"-104px -56px");
+            cima=0;
+        }else{
+            personagem.css('background-position',"-152px -55px");
+            cima++;
+        }
+    }
+    if(x=="esquerda"){
+        baixo=1;cima=1;direita=1;
+        switch (esquerda){
+            case 1:
+                personagem.css('background-position',"-9px -152px");
+                esquerda++;
+                break;
+            case 2:
+                personagem.css('background-position',"-57px -152px");
+                esquerda++;
+                break;
+            case 3:
+                personagem.css('background-position',"-105px -150px");
+                esquerda++;
+                break;
+            case 4:
+                personagem.css('background-position',"-153px -149px");
+                esquerda++;
+                break;
+            case 5:
+                personagem.css('background-position',"-201px -151px");
+                esquerda=1;
+                break;
+        }
+
+    }
+    if(x=="direita"){
+        baixo=1;cima=1;esquerda=1;
+        switch (direita){
+            case 1:
+                personagem.css('background-position',"-11px -104px");
+                direita++;
+                break;
+            case 2:
+                personagem.css('background-position',"-59px -104px");
+                direita++;
+                break;
+            case 3:
+                personagem.css('background-position',"-107px -102px");
+                direita++;
+                break;
+            case 4:
+                personagem.css('background-position',"-155px -101px");
+                direita++;
+                break;
+            case 5:
+                personagem.css('background-position',"-203px -103px");
+                direita=1;
+                break;
+        }
+    }
+}
+function movimentoparado() {
+    var personagem = $('#personagem');
+    switch (parado){
+        case 1:
+            personagem.css('background-position',"-8px -7px");
+            parado++;
+            break;
+        case 2:
+            personagem.css('background-position',"-56px -7px");
+            parado++;
+            break;
+        case 3:
+            personagem.css('background-position',"-104px -8px");
+            parado++;
+            break;
+        case 4:
+            personagem.css('background-position',"-152px -7px");
+            parado=1;
+            break;
+    }
+}
+
+function meutimer() {
+    tempo=tempo+1;
+    if(tempo==1){
+        myint = setInterval(function () {
+            movimentoparado();},150);
+    }
+
+}
